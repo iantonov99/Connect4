@@ -13,42 +13,34 @@ class Connect_4 {
         set_label_for_player(this.player_turn);
     }
 
+    //x max = 6, y = 5
     flip_block(x, y)
     {
         this.matrix[x][y] = this.player_turn === 1 ? 1 : 2;
         console.log(this.matrix)
-        if(this.check_if_win_scenario())
+        if(this.check_if_win_scenario(x,y))
         {
             alert(`Player ${this.player_turn} wins!`)
             show_win_screen();
         }
     }
 
-    check_if_win_scenario()
+    check_if_win_scenario(x,y)
     {
-        for(let i = 0; i < 6; i++)
-        {
-            for(let j = 0; j < 7;j++)
-            {
-                if(this.matrix[i][j] !== 0)
-                {
-                    if(this.check_up(this.matrix[i][j], i, j, 1)) {
-                        return true;
-                    }
-                    if(this.check_down(this.matrix[i][j], i, j, 1)) {
-                        return true;
-                    }
-                    if(this.check_left(this.matrix[i][j], i, j, 1)) {
-                        return true;
-                    }
-                    if(this.check_right(this.matrix[i][j], i, j, 1)) {
-                        return true;
-                    }
-                    if(this.check_diagonal(this.matrix[i][j], i, j, 1)) {
-                        return true;
-                    }
-                }
-            }
+        if(this.check_up(this.player_turn, x, y, 1)) {
+            return true;
+        }
+        if(this.check_down(this.player_turn, x, y, 1)) {
+            return true;
+        }
+        if(this.check_left(this.player_turn, x, y, 1)) {
+            return true;
+        }
+        if(this.check_right(this.player_turn, x, y, 1)) {
+            return true;
+        }
+        if(this.check_diagonal(this.player_turn, x, y, 1)) {
+            return true;
         }
     }
 
@@ -62,7 +54,8 @@ class Connect_4 {
         {
             if(this.matrix[x-1][y] === val)
             {
-                this.check_up(val, x-1, y, occurances++, );
+                console.log("recup")
+                return this.check_up(val, x-1, y, occurances + 1);
             }
         }
     }
@@ -73,11 +66,12 @@ class Connect_4 {
         {
             return true;
         }
-        if(x + 1 < 6)
+        if(x + 1 < 7)
         {
             if(this.matrix[x+1][y] === val)
             {
-                this.check_down(val, x-1, y, occurances++);
+                console.log("recdown")
+                return this.check_down(val, x+1, y, occurances + 1);
             }
         }
     }
@@ -91,21 +85,24 @@ class Connect_4 {
         if(y - 1 >= 0)
         {
             if(this.matrix[x][y-1] === val){
-                this.check_left(val, x-1, y, occurances++);
+                console.log("recleft")
+                return this.check_left(val, x, y-1, occurances + 1);
             }
         }
     }
 
     check_right(val, x, y, occurances)
     {
+        console.log(occurances)
         if(occurances === 4)
         {
             return true;
         }
-        if(y + 1 < 5)
+        if(y + 1 < 6)
         {
             if(this.matrix[x][y+1] === val){
-                this.check_right(val, x-1, y, occurances++);
+                console.log("recright")
+                return this.check_right(val, x, y + 1, occurances + 1);
             }
         }
     }
@@ -145,9 +142,9 @@ class Connect_4 {
     chech_if_draw()
     {
         let flag = true;
-        for(let i = 0; i < 6; i++)
+        for(let i = 0; i < 7; i++)
         {
-            for(let j = 0; j < 7;j++)
+            for(let j = 0; j < 6;j++)
             {
                 if(this.matrix[i][j] === 0)
                 {
@@ -188,16 +185,16 @@ function setup_game()
 function block_pressed(possition)
 {
     let player = game.get_player_turn();
-    let x_location = game.find_free_x_location(possition);
-    if(x_location !== -1)
+    let y_location = game.find_free_x_location(possition);
+    if(y_location !== -1)
     {
         console.log()
-        var block = document.getElementById(x_location + ',' + possition);
+        var block = document.getElementById(y_location + ',' + possition);
 
         block.innerHTML = player === 1 ? '<img src="images\\circle.png" />' : '<img src="images\\cross.png" />';
         block.disabled = true;
 
-        game.flip_block(possition, x_location);
+        game.flip_block(parseInt(possition), y_location);
         change_player_turn();
         if(game.chech_if_draw())
         {
