@@ -17,7 +17,6 @@ class Connect_4 {
     flip_block(x, y)
     {
         this.matrix[x][y] = this.player_turn === 1 ? 1 : 2;
-        console.log(this.matrix)
         if(this.check_if_win_scenario(x,y))
         {
             alert(`Player ${this.player_turn} wins!`)
@@ -39,7 +38,16 @@ class Connect_4 {
         if(this.check_right(this.player_turn, x, y, 1)) {
             return true;
         }
-        if(this.check_diagonal(this.player_turn, x, y, 1)) {
+        if(this.check_diagonal_left_down(this.player_turn, x, y, 1)) {
+            return true;
+        }
+        if(this.check_diagonal_left_up(this.player_turn, x, y, 1)) {
+            return true;
+        }
+        if(this.check_diagonal_right_down(this.player_turn, x, y, 1)) {
+            return true;
+        }
+        if(this.check_diagonal_right_up(this.player_turn, x, y, 1)) {
             return true;
         }
     }
@@ -54,7 +62,6 @@ class Connect_4 {
         {
             if(this.matrix[x-1][y] === val)
             {
-                console.log("recup")
                 return this.check_up(val, x-1, y, occurances + 1);
             }
         }
@@ -70,7 +77,6 @@ class Connect_4 {
         {
             if(this.matrix[x+1][y] === val)
             {
-                console.log("recdown")
                 return this.check_down(val, x+1, y, occurances + 1);
             }
         }
@@ -85,7 +91,6 @@ class Connect_4 {
         if(y - 1 >= 0)
         {
             if(this.matrix[x][y-1] === val){
-                console.log("recleft")
                 return this.check_left(val, x, y-1, occurances + 1);
             }
         }
@@ -93,7 +98,6 @@ class Connect_4 {
 
     check_right(val, x, y, occurances)
     {
-        console.log(occurances)
         if(occurances === 4)
         {
             return true;
@@ -101,19 +105,62 @@ class Connect_4 {
         if(y + 1 < 6)
         {
             if(this.matrix[x][y+1] === val){
-                console.log("recright")
                 return this.check_right(val, x, y + 1, occurances + 1);
             }
         }
     }
 
-    check_diagonal(val, x, y, occurances)
+    check_diagonal_left_up(val, x, y, occurances)
     {
         if(occurances === 4)
         {
             return true;
         }
-        //TODO
+        if(x -1 >= 0 && y - 1 >= 0)
+        {
+            if(this.matrix[x-1][y-1] === val){
+                return this.check_diagonal_left_up(val, x - 1, y - 1, occurances + 1);
+            }
+        }
+    }
+    check_diagonal_left_down(val, x, y, occurances)
+    {
+        if(occurances === 4)
+        {
+            return true;
+        }
+        if(x + 1 < 7 && y - 1 >= 0)
+        {
+            if(this.matrix[x+1][y-1] === val){
+                return this.check_diagonal_left_down(val, x + 1, y - 1, occurances + 1);
+            }
+        }
+    }
+    check_diagonal_right_up(val, x, y, occurances)
+    {
+        if(occurances === 4)
+        {
+            return true;
+        }
+        if(x - 1 >= 0 && y + 1 < 6)
+        {
+            if(this.matrix[x-1][y+1] === val){
+                return this.check_diagonal_right_up(val, x - 1, y + 1, occurances + 1);
+            }
+        }
+    }
+    check_diagonal_right_down(val, x, y, occurances)
+    {
+        if(occurances === 4)
+        {
+            return true;
+        }
+        if(x + 1 < 7 && y + 1 < 6)
+        {
+            if(this.matrix[x+1][y+1] === val){
+                return this.check_diagonal_right_down(val, x + 1, y + 1, occurances + 1);
+            }
+        }
     }
 
     get_player_turn()
@@ -188,7 +235,6 @@ function block_pressed(possition)
     let y_location = game.find_free_x_location(possition);
     if(y_location !== -1)
     {
-        console.log()
         var block = document.getElementById(y_location + ',' + possition);
 
         block.innerHTML = player === 1 ? '<img src="images\\circle.png" />' : '<img src="images\\cross.png" />';
